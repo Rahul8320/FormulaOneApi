@@ -1,0 +1,22 @@
+@FormulaOne.Api_HostAddress = http://localhost:5057
+
+### Get all drivers
+GET {{FormulaOne.Api_HostAddress}}/api/Driver/
+Accept: application/json
+
+### Get driver by id
+@driverId=5402a9ff-0461-4574-8d58-5172d6311da2
+GET {{FormulaOne.Api_HostAddress}}/api/Driver/{{driverId}}
+Accept: application/json
+
+### Create driver
+POST {{FormulaOne.Api_HostAddress}}/api/Driver/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "string",
+  "lastName": "string",
+  "driverNumber": 0,
+  "dateOfBirth": "2024-05-10T02:25:47.325Z"
+}
