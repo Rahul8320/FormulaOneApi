@@ -2,6 +2,9 @@ using System.Net;
 using FormulaOne.Api.Commands;
 using FormulaOne.Api.Models.Requests;
 using FormulaOne.Api.Queries;
+using FormulaOne.Services.Common;
+using FormulaOne.Services.Notification.Interface;
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,7 +88,17 @@ public class DriverController(IMediator mediator, Serilog.ILogger logger) : Base
                 return BadRequest(result.ErrorMessage);
             }
 
-            return CreatedAtAction(nameof(GetDriver), new { driverId = result.Data.DriverId }, result);
+            // Create and forget type of background jobs
+            var notificationDto = new NotificationDto()
+            {
+                DriverId = result.Data.DriverId,
+                Title = "Driver Created",
+                Message = $"Hello {result.Data.FullName}, Welcome to our website."
+            };
+            var jobId = BackgroundJob.Enqueue<INotificationService>(x => x.SendNotification(notificationDto));
+            logger.Information($"Background job called with id: {jobId}.");
+
+            return CreatedAtAction(nameof(GetDriver), new { driverId = result.Data.DriverId }, result.Data);
         }
         catch (Exception ex)
         {

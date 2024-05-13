@@ -65,5 +65,6 @@ After running the project, access the Swagger page for an intuitive interface to
 - Create a new driver or achievement.
 - View a list of drivers or their achievements.
 - Update driver or achievement details.
+- Add logs for error or update events.
 
 The Swagger page streamlines the process of managing drivers and achievements, making it easy and efficient to perform these tasks.
