@@ -1,12 +1,12 @@
 using FormulaOne.DataService.Data;
 using FormulaOne.DataService.Repositories;
 using FormulaOne.DataService.Repositories.Interfaces;
+using FormulaOne.Services.Caching;
+using FormulaOne.Services.Caching.Interface;
 using FormulaOne.Services.Notification;
 using FormulaOne.Services.Notification.Interface;
 using Hangfire;
 using Hangfire.Storage.SQLite;
-using HangfireBasicAuthenticationFilter;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -31,6 +31,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add services to the container.
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<ICachingService, CachingService>();
 
 // Injecting the MediatR to our DI
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
