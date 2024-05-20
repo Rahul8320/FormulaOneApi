@@ -1,3 +1,4 @@
+using FormulaOne.Api.Config;
 using FormulaOne.DataService.Data;
 using FormulaOne.DataService.Repositories;
 using FormulaOne.DataService.Repositories.Interfaces;
@@ -15,12 +16,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Get connection string
 var dbConnectionString = builder.Configuration.GetConnectionString("DbConnection");
 var hangfireConnectionString = builder.Configuration.GetConnectionString("HangfireConnection");
+var dbConfig = new DatabaseConfig();
+builder.Configuration.GetSection("DatabaseConfig").Bind(dbConfig);
 
 // Add Serilog
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 // Initializing my db context inside the DI container 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(dbConnectionString));
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlite(dbConnectionString, action =>
+    {
+        action.CommandTimeout(dbConfig.TimeoutTime);
+    });
+
+    if (builder.Environment.IsDevelopment())
+    {
+        options.EnableDetailedErrors(dbConfig.DetailedError);
+        options.EnableSensitiveDataLogging(dbConfig.SensitiveDataLogging);
+    }
+});
 
 // Add controllers
 builder.Services.AddControllers();
