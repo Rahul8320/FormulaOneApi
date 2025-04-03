@@ -1,3 +1,4 @@
+using FormulaOne.Api;
 using FormulaOne.Api.Config;
 using FormulaOne.DataService.Data;
 using FormulaOne.DataService.Repositories;
@@ -20,7 +21,9 @@ var dbConfig = new DatabaseConfig();
 builder.Configuration.GetSection("DatabaseConfig").Bind(dbConfig);
 
 // Add Serilog
-builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+builder.Host.UseSerilog((
+    context,
+    configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 // Initializing my db context inside the DI container 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -84,5 +87,6 @@ app.UseHangfireDashboard();
 app.MapHangfireDashboard("/hangfire");
 
 // RecurringJob.AddOrUpdate(() => Console.WriteLine("Hello from Hangfire!"), "* * * * *");
+app.ApplyPendingMigrations();
 
 app.Run();
