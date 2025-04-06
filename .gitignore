@@ -4,3 +4,7 @@
 .vscode
 /FormulaOne.Api/Logs
 FormulaOne.Api/hangfire.db
+
+
+**/*.db
+**/*.db-
